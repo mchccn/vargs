@@ -1,5 +1,5 @@
-import Ajv, { ErrorObject, Schema } from "ajv";
-import { JSONSchema7 } from "json-schema";
+import Ajv, { ErrorObject } from "ajv";
+import { JSONSchema7, JSONSchema7TypeName } from "json-schema";
 import { SYMBOLS } from "../constants";
 
 class ValidationError extends Error {
@@ -10,28 +10,34 @@ class ValidationError extends Error {
   }
 }
 
-export default function Required(schema: JSONSchema7) {
-  return (target: Object, name: string | symbol, index: number) => {
-    const required: { name: string | symbol; index: number; schema: Schema }[] =
+export default function Required(schema?: JSONSchema7 | JSONSchema7TypeName | JSONSchema7TypeName[]) {
+  return (target: object, name: string | symbol, index: number) => {
+    const required: { name: string | symbol; index: number; schema?: JSONSchema7 }[] =
       Reflect.getOwnMetadata(SYMBOLS.REQUIRED, target, name) ?? [];
 
-    required.push({ name, index, schema });
+    required.push({
+      name,
+      index,
+      schema: typeof schema === "string" || Array.isArray(schema) ? { type: schema } : schema,
+    });
 
     Reflect.defineMetadata(SYMBOLS.REQUIRED, required, target, name);
   };
 }
 
-export function validate(args: IArguments, required: { name: string | symbol; index: number; schema: Schema }[]) {
+export function validate(args: IArguments, required: { name: string | symbol; index: number; schema?: JSONSchema7 }[]) {
   for (const { name, index, schema } of required) {
     if (typeof args[index] === "undefined" || args[index] === null)
       throw new Error(`parameter ${String(name)} is required`);
 
-    const validate = new Ajv().compile(schema);
+    if (schema) {
+      const validate = new Ajv().compile(schema);
 
-    const valid = validate(args[index]);
+      validate(args[index]);
 
-    const [error] = validate.errors ?? [];
+      const [error] = validate.errors ?? [];
 
-    if (error) throw new ValidationError(error);
+      if (error) throw new ValidationError(error);
+    }
   }
 }
