@@ -1,0 +1,28 @@
+{
+    "name": "@cursorsdottsx/vargs",
+    "version": "1.0.0",
+    "description": "Argument validation at its finest.",
+    "main": "dist/index.js",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cursorsdottsx/vargs.git"
+    },
+    "keywords": [],
+    "author": "im-lonely <cursors.dev@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/cursorsdottsx/vargs/issues"
+    },
+    "homepage": "https://github.com/cursorsdottsx/vargs#readme",
+    "devDependencies": {
+        "@types/json-schema": "^7.0.7",
+        "@types/node": "^15.12.4",
+        "tslib": "^2.3.0",
+        "typescript": "^4.3.4"
+    },
+    "dependencies": {
+        "ajv": "^8.6.0",
+        "reflect-metadata": "^0.1.13"
+    }
+}
