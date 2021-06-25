@@ -5,4 +5,5 @@ export const SYMBOLS = {
   MIN_LENGTH: Symbol("MIN_LENGTH"),
   MAX_LENGTH: Symbol("MAX_LENGTH"),
   VALIDATE: Symbol("VALIDATE"),
+  TYPE: Symbol("TYPE"),
 } as const;
